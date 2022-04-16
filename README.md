@@ -57,9 +57,16 @@
 
 ### **Features**
 
-❤️ **Lightweight:** Crafted with minimalistic UI design.
+❤️ **Lightweight:** 
 
-⚡️ **Fast:** Send requests and get/copy responses in real-time.
+⚡️ **Fast:** 
+
+🩸 **Bleeding edge**
+
+🌱 **Holistic approach**
+
+🤯 **Gamechanging**
+
 
 **HTTP Methods**
 
