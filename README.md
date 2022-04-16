@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://hoppscotch.io">
     <img
-      src="https://avatars.githubusercontent.com/u/56705483"
+      src="https://github.com/A-childs-encyclopedia/EncyclopediaAPI/blob/bbb2edb6b941d2f9f957692bd8ea70c7ca2be2db/API.svg"
       alt="Hoppscotch Logo"
       height="64"
     />
