@@ -126,7 +126,7 @@
                 :shortcut="['⌫']"
                 @click.native="
                   () => {
-                    confirmRemove = true
+                    removeRequest()
                     options.tippy().hide()
                   }
                 "
@@ -136,12 +136,6 @@
         </span>
       </div>
     </div>
-    <SmartConfirmModal
-      :show="confirmRemove"
-      :title="t('confirm.remove_request')"
-      @hide-modal="confirmRemove = false"
-      @resolve="removeRequest"
-    />
     <HttpReqChangeConfirmModal
       :show="confirmChange"
       @hide-modal="confirmChange = false"
@@ -222,8 +216,6 @@ const emit = defineEmits<{
   (
     e: "remove-request",
     data: {
-      collectionIndex: number
-      folderName: string
       folderPath: string
       requestIndex: number
     }
@@ -265,7 +257,6 @@ const requestMethodLabels = {
   delete: "text-red-500",
   default: "text-gray-500",
 }
-const confirmRemove = ref(false)
 const confirmChange = ref(false)
 const showSaveRequestModal = ref(false)
 
@@ -304,8 +295,6 @@ const dragStart = ({ dataTransfer }: DragEvent) => {
 
 const removeRequest = () => {
   emit("remove-request", {
-    collectionIndex: props.collectionIndex,
-    folderName: props.folderName,
     folderPath: props.folderPath,
     requestIndex: props.requestIndex,
   })
@@ -333,6 +322,7 @@ const setRestReq = (request: any) => {
   )
 }
 
+/** Loads request from the save once, checks for unsaved changes, but ignores default values */
 const selectRequest = () => {
   if (!active.value) {
     confirmChange.value = true
@@ -372,6 +362,9 @@ const selectRequest = () => {
     } else {
       setRESTSaveContext(null)
     }
+  }
+  if (isEqualHoppRESTRequest(getRESTRequest(), getDefaultRESTRequest())) {
+    confirmChange.value = false
   }
 }
 

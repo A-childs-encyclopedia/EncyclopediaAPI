@@ -10,6 +10,7 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "strict": true,
+    "jsx": "preserve",
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
@@ -17,6 +18,7 @@
       "@/*": ["./*"]
     },
     "types": [
+      "@types/jest",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/i18n",
@@ -28,6 +30,6 @@
   },
   "exclude": ["node_modules", ".nuxt", "dist"],
   "vueCompilerOptions": {
-    "experimentalCompatMode": 2
+    "target": 2,
   }
 }

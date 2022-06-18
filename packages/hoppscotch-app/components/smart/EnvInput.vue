@@ -35,7 +35,6 @@ import { EditorState, Extension } from "@codemirror/state"
 import clone from "lodash/clone"
 import { tooltips } from "@codemirror/tooltip"
 import { history, historyKeymap } from "@codemirror/history"
-import { defaultKeymap } from "@codemirror/commands"
 import { inputTheme } from "~/helpers/editor/themes/baseTheme"
 import { HoppReactiveEnvPlugin } from "~/helpers/editor/extensions/HoppEnvironment"
 import { useReadonlyStream } from "~/helpers/utils/composables"
@@ -48,6 +47,7 @@ const props = withDefaults(
     styles: string
     envs: { key: string; value: string; source: string }[] | null
     focus: boolean
+    readonly: boolean
   }>(),
   {
     value: "",
@@ -55,6 +55,7 @@ const props = withDefaults(
     styles: "",
     envs: null,
     focus: false,
+    readonly: false,
   }
 )
 
@@ -124,7 +125,23 @@ const envTooltipPlugin = new HoppReactiveEnvPlugin(envVars, view)
 const initView = (el: any) => {
   const extensions: Extension = [
     EditorView.contentAttributes.of({ "aria-label": props.placeholder }),
+    EditorView.updateListener.of((update) => {
+      if (props.readonly) {
+        update.view.contentDOM.inputMode = "none"
+      }
+    }),
+    EditorState.changeFilter.of(() => !props.readonly),
     inputTheme,
+    props.readonly
+      ? EditorView.theme({
+          ".cm-content": {
+            caretColor: "var(--secondary-dark-color) !important",
+            color: "var(--secondary-dark-color) !important",
+            backgroundColor: "var(--divider-color) !important",
+            opacity: 0.25,
+          },
+        })
+      : EditorView.theme({}),
     tooltips({
       position: "absolute",
     }),
@@ -142,6 +159,8 @@ const initView = (el: any) => {
     ViewPlugin.fromClass(
       class {
         update(update: ViewUpdate) {
+          if (props.readonly) return
+
           if (update.docChanged) {
             const prevValue = clone(cachedValue.value)
 
@@ -177,7 +196,7 @@ const initView = (el: any) => {
       }
     ),
     history(),
-    keymap.of([...defaultKeymap, ...historyKeymap]),
+    keymap.of([...historyKeymap]),
   ]
 
   view.value = new EditorView({
